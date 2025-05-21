@@ -48,7 +48,7 @@
 
         public function failed(\Throwable $exception): void
         {
-            $this->csvUpload->update(['status' => CsvUpload::STATUS['failed']]);
+            $this->file->update(['status' => CsvUpload::STATUS['failed']]);
             Log::error('ImportCsvRecordsJob', [$exception->getMessage()]);
         }
 

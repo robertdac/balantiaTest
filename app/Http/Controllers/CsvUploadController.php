@@ -2,11 +2,9 @@
 
     namespace App\Http\Controllers;
 
-    use App\Jobs\ImportCsvRecordsJob;
-    use App\Jobs\InsertCsvDateGapsSummaryJob;
-    use App\Jobs\InsertCsvDuplicatesSummaryJob;
-    use App\Jobs\InsertCsvErrorsSummaryJob;
-    use App\Jobs\UpdateCsvUploadStatusJob;
+
+    use App\Http\Requests\CsvUploadRequest;
+    use App\Jobs\SplitCsvJob;
     use App\Models\CsvRecord;
     use App\Models\CsvUpload;
     use App\Services\FilterService;
@@ -45,27 +43,25 @@
             return view('uploadCsv.create');
         }
 
-        public function store(Request $request): \Illuminate\Http\RedirectResponse
+        public function store(CsvUploadRequest $request): \Illuminate\Http\RedirectResponse
         {
-            $request->validate([
-                'file' => 'required|mimes:csv,txt|max:40960',
-            ]);
 
             $path = $request->file('file')->store('csv_files');
-
             $csvUpload = CsvUpload::create([
-                'path' => $path,
+                'name' => $request->file('file')->getClientOriginalName(),
             ]);
 
-            ImportCsvRecordsJob::withChain([
-                new InsertCsvDuplicatesSummaryJob($csvUpload),
-                new InsertCsvErrorsSummaryJob($csvUpload),
-                new InsertCsvDateGapsSummaryJob($csvUpload),
-                new UpdateCsvUploadStatusJob($csvUpload, CsvUpload::STATUS['completed']),
-            ])->dispatch($csvUpload);
+            $csvUpload->files()->create([
+                'filename' => $request->file('file')->getClientOriginalName(),
+                'path' => $path,
+                'size' => $request->file('file')->getSize(),
+                'mime_type' => $request->file('file')->getMimeType(),
+            ]);
+
+             SplitCsvJob::dispatch($csvUpload);
 
 
-            return redirect()->route('uploadCsv.index')->with('success', 'File uploaded successfully.');
+            return redirect()->route('csv.index')->with('success', 'File uploaded successfully.');
         }
 
         public function show(CsvUpload $csv, Request $request, FilterService $filterService)

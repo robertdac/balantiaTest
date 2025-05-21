@@ -97,9 +97,13 @@
          */
         protected function loadDataIntoTempTable(string $tempTable): void
         {
-            $csvUploadId = (int)$this->csvUpload->id;
-            $csvPath = addslashes(storage_path('app/' . $this->csvUpload->path));
-            $loadSql = "
+
+            $this->file->each(function($item) use ($tempTable) {
+
+                //
+                $csvUploadId = (int)$item->fileable_id;
+                $csvPath = addslashes(storage_path('app/' . $item->path));
+                $loadSql = "
         LOAD DATA LOCAL INFILE '{$csvPath}'
         INTO TABLE {$tempTable}
         FIELDS TERMINATED BY ';'
@@ -112,7 +116,12 @@
             created_at = NOW(),
             updated_at = NOW()
     ";
+                DB::unprepared($loadSql);
 
-            DB::unprepared($loadSql);
+
+            });
+
+
+
         }
     }

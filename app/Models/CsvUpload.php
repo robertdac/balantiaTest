@@ -26,9 +26,13 @@
         'status_id'
     ];
 
-    public function getStatusNameAttribute()
-    {
-        $statusNames = array_flip(self::STATUS);
+        protected $dispatchesEvents = [
+            'updated' => CsvUploadStatusChanged::class,
+        ];
+
+        public function getStatusNameAttribute()
+        {
+            $statusNames = array_flip(self::STATUS);
 
         return $statusNames[$this->status_id] ?? 'Unknown';
     }

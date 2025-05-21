@@ -16,7 +16,7 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Fichero</th>
+                        <th>Nombre del fichero</th>
                         <th>Estado</th>
                        <th>Acciones</th>
                     </tr>
@@ -37,7 +37,7 @@
             ajax: '{{ route("csv.index") }}',
             columns: [
                 {data: 'id', name: 'id'},
-                {data: 'path', name: 'path'},
+                {data: 'name', name: 'name'},
                 {data: 'status_id', name: 'status_id'},
                 {data: 'actions', name: 'actions', orderable: false, searchable: false}
             ]

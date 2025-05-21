@@ -1,20 +1,25 @@
 <?php
 
-namespace App\Models;
+    namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+    use App\Events\CsvUploadStatusChanged;
+    use App\Events\FileCreated;
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Database\Eloquent\Relations\HasMany;
+    use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class CsvUpload extends Model
-{
-    use HasFactory;
+    class CsvUpload extends Model
+    {
+        use HasFactory;
 
-    const STATUS = [
-        'pending' => 1,
-        'processing' => 2,
-        'completed' => 3,
-        'failed' => 4,
-    ];
+        const STATUS = [
+            'pending' => 1,
+            'processing' => 2,
+            'files_stored' => 3,
+            'completed' => 4,
+            'failed' => 5,
+        ];
 
     protected $fillable = [
         'path',

@@ -17,7 +17,7 @@
     {
         use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-        protected $csvUpload;
+        protected $file;
         public $timeout = 600;
         public $tries = 3;
 
@@ -26,10 +26,9 @@
          *
          * @return void
          */
-        public function __construct(CsvUpload $csvUpload)
+        public function __construct(Collection $file)
         {
-            $this->csvUpload = $csvUpload;
-
+            $this->file = $file;
         }
 
         /**

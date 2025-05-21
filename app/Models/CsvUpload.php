@@ -21,10 +21,10 @@
             'failed' => 5,
         ];
 
-    protected $fillable = [
-        'path',
-        'status_id'
-    ];
+        protected $fillable = [
+            'path',
+            'status_id'
+        ];
 
         protected $dispatchesEvents = [
             'updated' => CsvUploadStatusChanged::class,
@@ -34,12 +34,18 @@
         {
             $statusNames = array_flip(self::STATUS);
 
-        return $statusNames[$this->status_id] ?? 'Unknown';
-    }
+            return $statusNames[$this->status_id] ?? 'Unknown';
+        }
 
 
     public function records(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(CsvRecord::class, 'csv_uploads_id');
+        {
+            return $this->hasMany(CsvRecord::class, 'csv_uploads_id');
+        }
+
+        public function files(): MorphMany
+        {
+            return $this->morphMany(File::class, 'fileable');
+        }
+
     }
-}

@@ -11,7 +11,7 @@
     use Illuminate\Queue\SerializesModels;
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Log;
-    use PDO;
+    use Illuminate\Database\Eloquent\Collection;
 
     class ImportCsvRecordsJob implements ShouldQueue
     {
